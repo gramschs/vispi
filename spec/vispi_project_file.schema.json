@@ -1,0 +1,478 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://owncloud.fraunhofer.de/index.php/s/ZxkUrIS4bZKkUCx/vispi_main.schema.json",
+  "title": "VISPI",
+  "description": "Project settings for VISPI simulations.",
+  "definitions": {
+    "model" : {
+      "description": "model parameters",
+      "type": "object",
+      "properties": {
+        "modelType": { "enum": ["viscousUniaxial", "viscousCurved"] },
+        "viscousUniaxial" : {
+          "description": "TODO description viscousUniaxial model",
+          "type":  "object",
+          "properties": {
+            "bc": {
+              "description": "choose bc: fixedEnd or freeEnd",
+              "type": "object",
+              "properties": {
+                "modelType": { "enum": ["fixedEnd", "freeEnd"] },
+                "fixedEnd": {
+                  "description": "TODO description of fixedEnd",
+                  "type": "object",
+                  "properties": {
+                    "uOut" : {
+                      "decription": "TODO description of uOut",
+                      "type": "number"
+                    },
+                    "rOut" : {
+                      "description": "TODO description of rOut",
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": ["uOut", "rOut"]
+                },
+                "freeEnd" : {
+                  "description": "TODO description freeEnd",
+                  "type": "object",
+                  "properties": {
+                    "rOut": {
+                      "description": "TODO description of rOut",
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": ["rOut"]
+                }
+              },
+              "required": ["modelType"]
+            }
+          }
+        },
+        "viscousCurved": {
+          "description": "TODO description viscousCurved",
+          "type": "object",
+          "properties": {
+            "bc": {
+              "description": "TODO description bc",
+              "type": "object",
+              "properties": {
+                "modelType": { "enum": ["fixedEnd", "freeEnd"]},
+                "fixedEnd" : {
+                  "description": "TODO description of fixedEnd for curved fibers",
+                  "type": "object",
+                  "properties": {
+                    "tauIn" : {
+                      "description": "TODO description tauIn",
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "uOut" : {
+                      "decription": "TODO description of uOut",
+                      "type": "number"
+                    },
+                    "rOut" : {
+                      "description": "TODO description of rOut",
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": ["tauIn", "uOut", "rOut"]
+                },
+                "freeEnd": {
+                  "description": "TODO description freeEnd",
+                  "type": "object",
+                  "properties": {
+                    "tauIn": {
+                      "description": "TODO description of tauIn",
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      },
+                      "L" : {
+                        "description": "TODO description of L",
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": ["tauIn", "L"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["modelType"],
+      "if": {
+      "properties": {
+        "modelType": { "string": "viscousUniaxial" }
+      }
+    },
+      "then": { "required": ["viscousUniaxial"] },
+      "else": { "required": ["viscousCurved"]   }
+    },
+    "process": {
+        "description": "Please choose process parameters:",
+        "type": "object",
+        "properties": {
+          "rIn": {
+          	"description": "TODO description rIN",
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items" : {
+              "type": "number"}
+            },
+          "dIn": {
+          	"description": "TODO description dIn",
+            "type": "number"
+          },
+          "uIn": {
+          	"description": "TODO description uIN",
+            "type": "number"
+          },
+          "TIn": {
+          	"description": "TODO description TIn",
+            "type": "number"
+          }
+        },
+        "required": [
+         "rIn", "dIn", "uIn", "TIn"
+        ]
+      },
+    "material": {
+      "description": "Project settings for VISPI simulations: material parameters",
+      "type": "object",
+      "properties": {
+        "density": {
+          "description": "TODO description density",
+          "type": "object",
+          "properties" : {
+            "modelType": { "enum": ["const"] },
+            "const" : {
+              "type": "object",
+              "properties" : {
+                "val": { "type": "number" }
+              },
+              "required": ["val"]
+            }
+          },
+          "required": ["modelType", "const"]
+        },
+        "heatCapacity": {
+          "description": "TODO heatCapacity",
+          "type": "object",
+          "properties" : {
+            "modelType": { "enum": ["const"] },
+            "const" : {
+              "type" : "object",
+              "properties": {
+                "val": {
+                  "type": "number"
+                }
+              },
+              "required": ["val"]
+            }
+          },
+          "required": ["modelType", "const"]
+        },
+        "viscosity" : {
+          "description": "TODO viscosity",
+          "type":  "object",
+          "properties" : {
+            "modelType" : { "enum": ["VFT"] },
+            "VFT" : {
+              "type": "object",
+              "properties": {
+                "mu_c": {
+                  "type": "number"
+                },
+                "B": {
+                  "type": "number"
+                },
+                "T_VF": {
+                  "type": "number"
+                }
+              },
+              "required": ["mu_c", "B", "T_VF"]
+            }
+          },
+          "required": ["modelType"]
+        }
+      },
+      "required": [
+        "density", "heatCapacity", "viscosity"
+      ]
+    },
+    "external": {
+      "description": "external parameters",
+      "type": "object",
+      "properties": {
+        "cfdEnabled": {
+          "description": "Please choose true or false.",
+          "type": "boolean"
+        },
+        "cfd": {
+          "type": "object",
+          "properties": {
+            "filename": {"type": "string"},
+            "fiberdomain": {"type": "string"},
+            "interpolation": {"enum": ["Matlab", "Ensight"]}
+          },
+          "required": ["filename", "fiberdomain", "interpolation"]
+        },
+        "gravityEnabled": {
+          "description": "Please choose true or false.",
+          "type": "boolean"
+        },
+        "gravity" : {
+          "type": "object",
+          "properties": {
+            "g": {"type": "number"},
+            "eg": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items" : {"type": "number"}
+            }
+          },
+          "required": ["g", "eg"]
+        }
+      },
+      "required": [
+          "cfdEnabled", "gravityEnabled"
+      ]
+    },
+    "num": {
+      "description": "numerical settings",
+      "type": "object",
+      "properties": {
+        "solver": {
+          "description": "TODO solver description",
+          "type": "string"
+        },
+        "initialGridSize": {
+          "description": "TODO initialGridSize description",
+          "type": "integer"
+        },
+        "maxGridSize": {
+          "description": "TODO maxGridSize description",
+          "type": "integer"
+        },
+        "continuationStepSize": {
+          "description": "TODO continuationGridSize description",
+          "type": "number"
+        }
+      },
+      "required": ["solver", "initialGridSize", "maxGridSize", "continuationStepSize"]
+    },
+    "output": {
+      "description": "TODO description output",
+      "type": "object",
+      "properties": {
+        "filename": {"type": "string"},
+        "dim": {"type": "boolean"},
+        "dimless": {"type": "boolean"},
+        "interpolated": {"type": "boolean"},
+        "interpolationGridSize": {"type": "number"}
+      },
+      "required": ["filename", "dim", "dimless", "interpolated", "interpolationGridSize"]
+    },
+    "conti": {
+      "description": "continuation parameters",
+      "type": "object",
+      "properties": {
+        "factorRe": { "type": "number" },
+        "factorEps": { "type": "number" },
+        "parameters": { "type": "array" }
+      },
+      "required": [
+      "factorRe", "factorEps", "parameters"
+      ]
+    },
+    "typ": {
+      "description": "typical values settings",
+      "type": "object",
+      "properties" : {
+        "r" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "u" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "T" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "rho" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "cp" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "mu" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "etaAir" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "rhoAir" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "cpAir" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "lambdaAir" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        },
+        "alpha" : {
+          "type": "object",
+          "properties" : {
+            "modelType": {"enum": ["explicit", "SI"]},
+            "explicit": {
+              "type": "object",
+              "properties": {
+                "val": {"type": "number"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "version": {
+      "description": "version of the project settings' specifiction",
+      "type": "string"
+    },
+    "model": {"$ref": "#/definitions/model"},
+    "process": {"$ref": "#/definitions/process"},
+    "material": {"$ref": "#/definitions/material"},
+    "external": {"$ref": "#/definitions/external"},
+    "num": {"$ref": "#/definitions/num"},
+    "output": {"$ref": "#/definitions/output"},
+    "conti": {"$ref": "#/definitions/conti"},
+    "typ": {"$ref": "#/definitions/typ"}
+  },
+  "required": [
+    "version",
+    "model",
+    "process",
+    "material",
+    "external",
+    "output",
+    "num",
+    "conti",
+    "typ"
+  ]
+}
