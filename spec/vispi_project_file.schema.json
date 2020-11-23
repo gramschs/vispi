@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://owncloud.fraunhofer.de/index.php/s/ZxkUrIS4bZKkUCx/vispi_main.schema.json",
+  "$id": "https://github.com/gramschs/vispi/blob/main/spec/vispi_project_file.schema.json",
   "title": "VISPI",
   "description": "Project settings for VISPI simulations.",
   "definitions": {
